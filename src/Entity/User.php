@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ApiResource(
@@ -35,6 +36,8 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Groups({"read","write"})
+     * @Assert\NotBlank()
+     * @Assert\Email()
      */
     private $email;
 
@@ -48,18 +51,25 @@ class User implements UserInterface
      * @var string The hashed password
      * @ORM\Column(type="string")
      * @Groups({"write"})
+     * @Assert\NotBlank()
+     * @Assert\Regex(
+     *     pattern="/(?=.*[A-Z]).(?=.*[a-z])(?=.*[0-9]).{8,}/",
+     *     message="Password must be eight characters long and containt at least one digit, one upper case letter and lower case letter"
+     * )
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"read","write"})
+     * @Assert\NotBlank()
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"read","write"})
+     * @Assert\NotBlank()
      */
     private $lastName;
 
